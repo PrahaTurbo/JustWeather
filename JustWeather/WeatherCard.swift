@@ -15,7 +15,7 @@ struct WeatherCard: View {
             HStack(alignment: .top) {
                 HStack(alignment: .top) {
                     Text(viewModel.currentWeather.temp.roundedDegrees().dropLast())
-                        .font(.system(size: 100, design: .rounded).bold())
+                        .font(.system(size: 100).bold())
                     
                     Text("°")
                         .font(.system(size: 50))
@@ -26,18 +26,17 @@ struct WeatherCard: View {
                 
                 Image(systemName: viewModel.currentWeather.weather[0].getWeatherIcon())
                     .font(.system(size: 100))
-                    .border(.red)
                 
             }
             
             VStack(alignment: .leading) {
                 
                 Text(viewModel.currentWeather.weather[0].description.capitalizingFirstLetter())
-                    .font(.system(.headline, design: .rounded))
+                    .font(.headline)
 
                 
                 Text("Ощущается как \(viewModel.currentWeather.feelsLike.roundedDegrees())")
-                    .font(.system(.subheadline, design: .rounded))
+                    .font(.subheadline)
             }
             
             HStack {
@@ -54,9 +53,6 @@ struct WeatherCard: View {
             .padding(.top, 30)
         }
         .padding()
-        .background(.blue)
-        .foregroundColor(.white)
-        .clipShape(RoundedRectangle(cornerRadius: 20, style: .continuous))
     }
 }
 

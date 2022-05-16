@@ -13,7 +13,7 @@ struct Weather: Codable {
     let hourly: [Current]
     let daily: [Daily]
     
-    struct Current: Codable {
+    struct Current: Codable, Hashable {
         let dt: Date
         let temp: Double
         let feelsLike: Double
@@ -29,8 +29,8 @@ struct Weather: Codable {
         let weather: [WeatherInfo]
     }
     
-    struct Daily: Codable {
-        let dt: Int
+    struct Daily: Codable, Hashable {
+        let dt: Date
         let sunrise: Int
         let sunset: Int
         let moonrise: Int
@@ -47,11 +47,11 @@ struct Weather: Codable {
         let pop, uvi: Double
         let rain: Double?
         
-        struct FeelsLike: Codable {
+        struct FeelsLike: Codable, Hashable  {
             let day, night, eve, morn: Double
         }
         
-        struct Temp: Codable {
+        struct Temp: Codable, Hashable  {
             let day, min, max, night: Double
             let eve, morn: Double
         }

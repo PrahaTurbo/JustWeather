@@ -9,9 +9,16 @@ import SwiftUI
 
 @main
 struct JustWeather: App {
+    @StateObject var favorites: FavoritesService
+    
     var body: some Scene {
         WindowGroup {
             MainView()
+                .environmentObject(favorites)
         }
+    }
+    
+    init() {
+        _favorites = StateObject(wrappedValue: FavoritesService())
     }
 }

@@ -9,15 +9,15 @@ import Foundation
 
 extension Weather.WeatherInfo {
     enum Icon: String {
-        case thunderstorm = "cloud.bolt.fill"
-        case drizzle = "cloud.drizzle.fill"
-        case rain = "cloud.rain.fill"
-        case snow = "cloud.snow.fill"
-        case clearDay = "sun.max.fill"
-        case clearNight = "moon.stars.fill"
-        case cloudsDay = "cloud.sun.fill"
-        case cloudsNight = "cloud.moon.fill"
-        case fog = "cloud.fog.fill"
+        case thunderstorm = "cloud.bolt"
+        case drizzle = "cloud.drizzle"
+        case rain = "cloud.rain"
+        case snow = "cloud.snow"
+        case clearDay = "sun.max"
+        case clearNight = "moon.stars"
+        case cloudsDay = "cloud.sun"
+        case cloudsNight = "cloud.moon"
+        case fog = "cloud.fog"
     }
     
     func getWeatherIcon() -> String {
@@ -31,13 +31,13 @@ extension Weather.WeatherInfo {
         case "Snow":
             return Icon.snow.rawValue
         case "Clear":
-            if self.main.dropFirst(2) == "d" {
+            if self.icon.dropFirst(2) == "d" {
                 return Icon.clearDay.rawValue
             } else {
                 return Icon.clearNight.rawValue
             }
         case "Clouds":
-            if self.main.dropFirst(2) == "d" {
+            if self.icon.dropFirst(2) == "d" {
                 return Icon.cloudsDay.rawValue
             } else {
                 return Icon.cloudsNight.rawValue
