@@ -100,14 +100,12 @@ struct MainView: View {
                     }
                 }
                 
-                if showingCityList {
-                    AddCity()
-                        .transition(.asymmetric(insertion: .move(edge: .trailing), removal: .move(edge: .leading)))
-                }
+                
             }
             .environmentObject(viewModel)
             .navigationBarTitleDisplayMode(.inline)
         }
+        .overlay(showingCityList ? AddCity(showingCityList: $showingCityList) : nil)
     }
     
     init() {
