@@ -8,53 +8,89 @@
 import Combine
 import Foundation
 import MapKit
+import CoreLocation
 
-class MapSearch : NSObject, ObservableObject {
-    @Published var locationResults : [MKLocalSearchCompletion] = []
-    @Published var searchTerm = ""
+@MainActor final class LocationService: NSObject, ObservableObject, MKLocalSearchCompleterDelegate {
+    @Published var locationResults = [MKLocalSearchCompletion]()
     
-    private var cancellables : Set<AnyCancellable> = []
+    @Published var searchTerm = "" {
+        didSet {
+            searchCompleter.delegate = self
+            searchCompleter.region = MKCoordinateRegion()
+            searchCompleter.resultTypes = MKLocalSearchCompleter.ResultType([.address])
+            
+            getCities(searchText: searchTerm)
+            
+            if searchTerm.isEmpty {
+                locationResults.removeAll()
+            }
+        }
+    }
+    
+    func getCities(searchText: String) {
+        searchCompleter.queryFragment = searchText
+        locationResults = searchCompleter.results
+    }
+    
+    func getCoordinates(for city: String, subtitle: String) async -> Location {
+        do {
+            let placemarks = try await CLGeocoder().geocodeAddressString(city)
+
+            let coordinates = placemarks[0].location?.coordinate ?? CLLocationCoordinate2D(latitude: 20, longitude: 20)
+            
+            print("Succesfully got coodinates for: \(city)")
+            print(coordinates)
+            return Location(name: city, subtitle: subtitle, latitude: String(coordinates.latitude), longitude: String(coordinates.longitude))
+        } catch {
+            print("Unable to get coordinates for: \(city)")
+        }
+        
+        return Location.placeholder
+    }
+    
+//    private var cancellables : Set<AnyCancellable> = []
     
     private var searchCompleter = MKLocalSearchCompleter()
-    private var currentPromise : ((Result<[MKLocalSearchCompletion], Error>) -> Void)?
     
-    override init() {
-        super.init()
-        searchCompleter.delegate = self
-        searchCompleter.region = MKCoordinateRegion()
-        searchCompleter.resultTypes = MKLocalSearchCompleter.ResultType([.address])
-        
-        $searchTerm
-            .debounce(for: .seconds(0.5), scheduler: RunLoop.main)
-            .removeDuplicates()
-            .flatMap({ (currentSearchTerm) in
-                self.searchTermToResults(searchTerm: currentSearchTerm)
-            })
-            .sink(receiveCompletion: { (completion) in
-                //handle error
-            }, receiveValue: { (results) in
-                self.locationResults = results
-            })
-            .store(in: &cancellables)
-    }
+//    private var currentPromise : ((Result<[MKLocalSearchCompletion], Error>) -> Void)?
     
-    func searchTermToResults(searchTerm: String) -> Future<[MKLocalSearchCompletion], Error> {
-        Future { promise in
-            self.searchCompleter.queryFragment = searchTerm
-            self.currentPromise = promise
-        }
-    }
-}
-
-extension MapSearch : MKLocalSearchCompleterDelegate {
-    func completerDidUpdateResults(_ completer: MKLocalSearchCompleter) {
-            currentPromise?(.success(completer.results))
-        }
-    
-    func completer(_ completer: MKLocalSearchCompleter, didFailWithError error: Error) {
-        //could deal with the error here, but beware that it will finish the Combine publisher stream
-        //currentPromise?(.failure(error))
-    }
+//    override init() {
+//        super.init()
+//        searchCompleter.delegate = self
+//        searchCompleter.region = MKCoordinateRegion()
+//        searchCompleter.resultTypes = MKLocalSearchCompleter.ResultType([.address])
+//
+//        $searchTerm
+//            .debounce(for: .seconds(0.5), scheduler: RunLoop.main)
+//            .removeDuplicates()
+//            .flatMap({ (currentSearchTerm) in
+//                self.searchTermToResults(searchTerm: currentSearchTerm)
+//            })
+//            .sink(receiveCompletion: { (completion) in
+//                //handle error
+//            }, receiveValue: { (results) in
+//                self.locationResults = results
+//            })
+//            .store(in: &cancellables)
+//    }
+//
+//    func searchTermToResults(searchTerm: String) -> Future<[MKLocalSearchCompletion], Error> {
+//        Future { promise in
+//            self.searchCompleter.queryFragment = searchTerm
+//            self.currentPromise = promise
+//        }
+//    }
+//}
+//
+//extension MapSearch : MKLocalSearchCompleterDelegate {
+//    func completerDidUpdateResults(_ completer: MKLocalSearchCompleter) {
+//            currentPromise?(.success(completer.results))
+//        }
+//
+//    func completer(_ completer: MKLocalSearchCompleter, didFailWithError error: Error) {
+//        //could deal with the error here, but beware that it will finish the Combine publisher stream
+//        //currentPromise?(.failure(error))
+//    }
 }
 
 

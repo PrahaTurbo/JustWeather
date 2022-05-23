@@ -8,13 +8,13 @@
 import SwiftUI
 
 struct WeatherCard: View {
-    @EnvironmentObject var viewModel: MainView.ViewModel
+    @EnvironmentObject var weatherService: WeatherService
     
     var body: some View {
         VStack(alignment: .leading) {
             HStack(alignment: .top) {
                 HStack(alignment: .top) {
-                    Text(viewModel.currentWeather.temp.roundedDegrees().dropLast())
+                    Text(weatherService.currentWeather.temp.roundedDegrees().dropLast())
                         .font(.system(size: 100).bold())
                     
                     Text("°")
@@ -24,31 +24,31 @@ struct WeatherCard: View {
                 
                 Spacer()
                 
-                Image(systemName: viewModel.currentWeather.weather[0].getWeatherIcon())
+                Image(systemName: weatherService.currentWeather.weather[0].getWeatherIcon())
                     .font(.system(size: 100))
                 
             }
             
             VStack(alignment: .leading) {
                 
-                Text(viewModel.currentWeather.weather[0].description.capitalizingFirstLetter())
+                Text(weatherService.currentWeather.weather[0].description.capitalizingFirstLetter())
                     .font(.headline)
 
                 
-                Text("Ощущается как \(viewModel.currentWeather.feelsLike.roundedDegrees())")
+                Text("Ощущается как \(weatherService.currentWeather.feelsLike.roundedDegrees())")
                     .font(.subheadline)
             }
             
             HStack {
-                Label("\(viewModel.currentWeather.humidity)%", systemImage: "humidity.fill")
+                Label("\(weatherService.currentWeather.humidity)%", systemImage: "humidity.fill")
                 
                 Spacer()
                 
-                Label("\(String(viewModel.currentWeather.windSpeed)) м/с", systemImage: "wind")
+                Label("\(String(weatherService.currentWeather.windSpeed)) \(weatherService.units == .metric ? "м/с" : "mph")", systemImage: "wind")
                 
                 Spacer()
                 
-                Label("\(viewModel.currentWeather.visibility / 1000) км", systemImage: "eye.fill")
+                Label("\(weatherService.currentWeather.visibility / 1000) км", systemImage: "eye.fill")
             }
             .padding(.top, 30)
         }
@@ -58,6 +58,7 @@ struct WeatherCard: View {
 
 struct WeatherCard_Previews: PreviewProvider {
     static var previews: some View {
-        MainView()
+        Main()
+            .environmentObject(WeatherService())
     }
 }

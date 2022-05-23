@@ -19,13 +19,13 @@ struct Weather: Codable {
         let feelsLike: Double
         let pressure: Int
         let humidity: Int
-        let dewPoint: Double
+        let dewPoint: Double?
         let uvi: Double
         let clouds: Int
         let visibility: Int
         let windSpeed: Double
-        let windDeg: Int
-        let windGust: Double
+        let windDeg: Int?
+        let windGust: Double?
         let weather: [WeatherInfo]
     }
     
