@@ -19,11 +19,12 @@ struct Search: View {
                 HStack {
                     SearchBar(searchText: $locationService.searchTerm)
                     
-                    Button("Отменить") {
+                    Button("cancel-button") {
                         locationService.searchTerm.removeAll()
                         
                         dismiss()
                     }
+                    .foregroundColor(.accentColor)
                 }
                 
                 ForEach(locationService.locationResults, id: \.self) { location in
@@ -31,7 +32,7 @@ struct Search: View {
                         Task {
                             favorites.add(city: await locationService.getCoordinates(for: location.title, subtitle: location.subtitle))
                             
-                            await weatherService.getCurrentTemp(for: favorites.cities)
+                            await weatherService.getWeather(addToFavoritiesWeather: true, for: favorites.cities.last)
                             
                             locationService.searchTerm.removeAll()
                         }
@@ -43,8 +44,8 @@ struct Search: View {
                             Text(location.subtitle)
                                 .font(.system(.caption))
                         }
+                        .frame(maxWidth: .infinity, alignment: .leading)
                     }
-                    .foregroundColor(.primary)
                 }
                 .padding(.horizontal)
             }

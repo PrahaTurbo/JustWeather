@@ -8,13 +8,15 @@
 import SwiftUI
 
 struct WeatherCard: View {
-    @EnvironmentObject var weatherService: WeatherService
+    let currentWeather: Weather.Current
+    let units: Unit
     
     var body: some View {
         VStack(alignment: .leading) {
+            
             HStack(alignment: .top) {
                 HStack(alignment: .top) {
-                    Text(weatherService.currentWeather.temp.roundedDegrees().dropLast())
+                    Text(currentWeather.temp.roundedDegrees().dropLast())
                         .font(.system(size: 100).bold())
                     
                     Text("°")
@@ -24,41 +26,55 @@ struct WeatherCard: View {
                 
                 Spacer()
                 
-                Image(systemName: weatherService.currentWeather.weather[0].getWeatherIcon())
+                Image(systemName: currentWeather.weather[0].getWeatherIcon())
                     .font(.system(size: 100))
-                
             }
             
             VStack(alignment: .leading) {
                 
-                Text(weatherService.currentWeather.weather[0].description.capitalizingFirstLetter())
+                Text(currentWeather.weather[0].description.capitalizingFirstLetter())
                     .font(.headline)
 
                 
-                Text("Ощущается как \(weatherService.currentWeather.feelsLike.roundedDegrees())")
-                    .font(.subheadline)
+                Text("feels-like")
+                    .font(.caption)
+                    .foregroundColor(.secondary)
+                + Text(" \(currentWeather.feelsLike.roundedDegrees())")
+                    .font(.caption)
+                    .foregroundColor(.secondary)
             }
             
             HStack {
-                Label("\(weatherService.currentWeather.humidity)%", systemImage: "humidity.fill")
+                Label("\(currentWeather.humidity)%", systemImage: "humidity.fill")
                 
                 Spacer()
                 
-                Label("\(String(weatherService.currentWeather.windSpeed)) \(weatherService.units == .metric ? "м/с" : "mph")", systemImage: "wind")
+                HStack(spacing: 3) {
+                    Label("\(String(currentWeather.windSpeed))", systemImage: "wind")
+                    
+                    Text(units == .metric ? "metre-per-second" : "mph")
+                }
                 
                 Spacer()
                 
-                Label("\(weatherService.currentWeather.visibility / 1000) км", systemImage: "eye.fill")
+                HStack(spacing: 3) {
+                    Label("\(currentWeather.visibility / 1000)", systemImage: "eye.fill")
+                    
+                    Text("kilometers")
+
+                }
             }
+            .font(.subheadline)
             .padding(.top, 30)
         }
-        .padding()
+        .padding(.horizontal)
     }
 }
 
 struct WeatherCard_Previews: PreviewProvider {
+    static let collection: Weather = Bundle.main.decode("exampleWeather.json")
+    
     static var previews: some View {
-        Main()
-            .environmentObject(WeatherService())
+        WeatherCard(currentWeather: collection.current, units: .metric)
     }
 }

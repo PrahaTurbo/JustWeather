@@ -10,6 +10,7 @@ import SwiftUI
 struct CityTile: View {
     @EnvironmentObject var weatherService: WeatherService
     @EnvironmentObject var favorites: FavoritesService
+    @EnvironmentObject var userLocationService: UserLocationService
     
     @Binding var showingCityList: Bool
     let city: Location
@@ -26,55 +27,76 @@ struct CityTile: View {
             } label: {
                 ZStack(alignment: .top) {
                     Color.white
-
-                    VStack(alignment: .leading, spacing: 20) {
+                    
+                    VStack(alignment: .leading) {
                         HStack {
-                            Text(weatherService.favoritiesTemp[city]?.current.temp.roundedDegrees() ?? "0")
+                            Text(weatherService.favoritiesWeather[city]?.current.temp.roundedDegrees() ?? "--")
                                 .font(.largeTitle.bold())
                             
                             Spacer()
                             
-                            Image(systemName: weatherService.favoritiesTemp[city]?.current.weather[0].getWeatherIcon() ?? "cloud")
+                            Image(systemName: weatherService.favoritiesWeather[city]?.current.weather[0].getWeatherIcon() ?? "cloud")
                                 .font(.largeTitle)
-                                .imageScale(.large)
+                                .shadow(color: .black.opacity(0.1), radius: 10)
                         }
+                        
+                        Spacer()
                         
                         VStack(alignment: .leading) {
-                            Text(city.name)
-                        
+                            HStack(spacing: 3) {
+                                if city.name == "current-location-name" {
+                                    Image(systemName: "location.fill")
+                                        .font(.caption)
+                                }
+                                
+                                Text(LocalizedStringKey(city.name))
+                                    .minimumScaleFactor(0.5)
+                            }
+                            
                             Text(city.subtitle)
                                 .foregroundColor(.secondary)
+                                .font(.caption)
+                                .minimumScaleFactor(0.5)
+                                .lineLimit(2)
+
                         }
                         
+                        Spacer()
+                        
                         HStack {
-                            Label("\(weatherService.favoritiesTemp[city]?.current.humidity ?? 0)%", systemImage: "humidity.fill")
+                            Label("\(weatherService.favoritiesWeather[city]?.current.humidity ?? 0)%", systemImage: "humidity.fill")
                             
                             Spacer()
                             
-                            Label("\(String(weatherService.favoritiesTemp[city]?.current.windSpeed ?? 0)) \(weatherService.units == .metric ? "м/с" : "mph")", systemImage: "wind")
+                            Label("\(String(weatherService.favoritiesWeather[city]?.current.windSpeed ?? 0)) \(weatherService.units == .metric ? "м/с" : "mph")", systemImage: "wind")
                         }
                         .font(.caption)
+                        .minimumScaleFactor(0.5)
 
                     }
                     .padding()
                 }
                 .aspectRatio(1, contentMode: .fit)
-                .foregroundColor(.primary)
+                .clipShape(RoundedRectangle(cornerRadius: 20, style: .continuous))
+                .overlay(
+                    RoundedRectangle(cornerRadius: 20, style: .continuous)
+                        .stroke(lineWidth: 2)
+                )
+                .overlay(isEditing
+                         ? Button {
+                            favorites.delete(city: city)
+                        } label: {
+                            Image(systemName: "minus.circle.fill")
+                                .offset(x: -5, y: -5)
+                                .font(.title2)
+                                .symbolRenderingMode(.multicolor)
+                        }
+                        .buttonStyle(ScaledButton())
+                        .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topLeading)
+                         : nil
+                )
             }
-            .clipShape(RoundedRectangle(cornerRadius: 20, style: .continuous))
-            .zIndex(1)
-            
-            if isEditing {
-                Image(systemName: "minus.circle.fill")
-                    .offset(x: -5, y: -5)
-                    .font(.title2)
-                    .symbolRenderingMode(.multicolor)
-                    .transition(.scale.combined(with: .opacity))
-                    .zIndex(2)
-                    .onTapGesture {
-                        favorites.delete(city: city)
-                    }
-            }
+            .buttonStyle(ScaledButton())
         }
     }
 }
@@ -84,6 +106,7 @@ struct CityTile_Previews: PreviewProvider {
         CityTile(showingCityList: .constant(false), city: .placeholder, isEditing: true)
             .environmentObject(WeatherService())
             .environmentObject(FavoritesService())
+            .environmentObject(UserLocationService())
             .padding()
             .shadow(radius: 10)
     }

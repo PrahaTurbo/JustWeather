@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import SwiftUI
 
 extension Weather.WeatherInfo {
     enum Icon: String {

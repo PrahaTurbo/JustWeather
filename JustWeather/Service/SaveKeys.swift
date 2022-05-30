@@ -10,6 +10,7 @@ import Foundation
 enum SaveKeys: String {
     case favoriteCities = "FavoriteCities"
     case units = "Units"
+    case currentLocation = "CurrentLocation"
     
     var savePath: URL {
         FileManager.documentsDirectory.appendingPathComponent(self.rawValue)

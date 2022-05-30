@@ -1,0 +1,33 @@
+/* 
+  Localizable.strings
+  JustWeather
+
+  Created by Артем Ластович on 30.05.2022.
+  
+*/
+
+//Main
+"add-city-text" = "Перейди в меню, чтобы выбрать город";
+"feels-like" = "Ощущается как";
+"metre-per-second" = "м/с";
+"kilometers" = "км";
+
+//FavoriteCities
+"favorities-title" = "Избранное";
+"alert-title" = "Ошибка";
+"alert-message" = "Не получилось добавить локацию. Попробуйте выбрать другую.";
+"done-button" = "Готово";
+"edit-button" = "Изменить";
+"add-user-location-title" = "Нажмите, чтобы открыть местоположение";
+"add-user-location-subtitle" = "Получите данные о погоде в текущем местоположении";
+"cancel-button" = "Отменить";
+"search-placeholder" = "Город";
+
+//Settings
+"settings-title" = "Настройки";
+"measurement-system" = "Система измерений";
+"Metric" = "Метрическая";
+"Imperial" = "Имперская";
+
+//UserLocationService
+"current-location-name" = "Текущее местоположение";

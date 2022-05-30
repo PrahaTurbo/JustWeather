@@ -9,12 +9,12 @@ import SwiftUI
 import MapKit
 
 struct FavoriteCities: View {
-    @EnvironmentObject var favorites: FavoritesService
-    @EnvironmentObject var locationService: LocationService
-    @EnvironmentObject var weatherService: WeatherService
-    
     @StateObject private var viewModel: ViewModel
     
+    @EnvironmentObject var favorites: FavoritesService
+    @EnvironmentObject var weatherService: WeatherService
+    @EnvironmentObject var userLocationService: UserLocationService
+        
     @Binding var showingCityList: Bool
     
     let columns = [
@@ -24,28 +24,48 @@ struct FavoriteCities: View {
     
     var body: some View {
         NavigationView {
-            ScrollView(.vertical) {
-                LazyVGrid(columns: columns) {
-                    ForEach(favorites.cities) { city in
-                        CityTile(showingCityList: $showingCityList, city: city, isEditing: viewModel.isEditing)
-                    }
-                    
-                    Button {
-                        viewModel.searchIsActive = true
-                    } label: {
-                        ZStack {
-                            Color.white
-                            
-                            Image(systemName: "plus")
-                                .font(.largeTitle)
-                                .imageScale(.large)
+            ZStack {
+                ScrollView(.vertical) {
+                    LazyVGrid(columns: columns) {
+                        if let currentLocation = userLocationService.lastKnownLocation {
+                            switch userLocationService.locationStatus {
+                            case .authorizedAlways, .authorizedWhenInUse:
+                                CityTile(showingCityList: $showingCityList, city: currentLocation, isEditing: false)
+                            default:
+                                LocationRequestButton {
+                                    viewModel.settingsOpener()
+                                }
+                            }
                         }
-                        .aspectRatio(1, contentMode: .fit)
+                        
+                        ForEach(favorites.cities) { city in
+                            CityTile(showingCityList: $showingCityList, city: city, isEditing: viewModel.isEditing)
+                        }
+                        
+                        Button {
+                            viewModel.searchIsActive = true
+                        } label: {
+                            ZStack {
+                                Color.white
+                                
+                                Image(systemName: "plus")
+                                    .font(.largeTitle)
+                                    .imageScale(.large)
+                            }
+                            .aspectRatio(1, contentMode: .fit)
+                            .clipShape(RoundedRectangle(cornerRadius: 20, style: .continuous))
+                            .overlay(
+                                RoundedRectangle(cornerRadius: 20, style: .continuous)
+                                    .stroke(lineWidth: 2)
+                            )
+                        }
+                        .buttonStyle(ScaledButton())
                     }
-                    .clipShape(RoundedRectangle(cornerRadius: 20, style: .continuous))
+                    .shadow(color: .black.opacity(0.1), radius: 10)
+                    .padding()
                 }
-                .shadow(color: .black.opacity(0.1), radius: 10)
-                .padding()
+                
+                
             }
             .sheet(isPresented: $viewModel.searchIsActive) {
                 Search()
@@ -62,24 +82,26 @@ struct FavoriteCities: View {
                 }
                 
                 ToolbarItem(placement: .navigationBarTrailing) {
-                    Button(viewModel.isEditing ? "Готово" : "Изменить") {
+                    Button(viewModel.isEditing ? "done-button" : "edit-button") {
                         withAnimation(.spring().speed(3)) {
                             viewModel.isEditing.toggle()
                         }
                     }
+                    .foregroundColor(.accentColor)
                     .animation(nil, value: viewModel.isEditing)
+                }
+                
+                ToolbarItem(placement: .principal) {
+                    Text("favorities-title")
+                        .bold()
                 }
             }
             .navigationBarTitleDisplayMode(.inline)
-            .task {
-                await weatherService.getCurrentTemp(for: favorites.cities)
-            }
-            .alert("Ошибка добавления", isPresented: $favorites.alertForAdd) {
-                //
+            .alert("alert-title", isPresented: $favorites.alertForAdd) {
+                //There will be OK button by default
             } message: {
-                Text("Не получилось добавить локацию. Попробуйте выбрать другую.")
+                Text("alert-message")
             }
-
         }
         .transition(.move(edge: .leading))
     }
@@ -95,8 +117,7 @@ struct FavoriteCities_Previews: PreviewProvider {
     static var previews: some View {
         FavoriteCities(showingCityList: .constant(true))
             .environmentObject(FavoritesService())
-            .environmentObject(LocationService())
+            .environmentObject(UserLocationService())
             .environmentObject(WeatherService())
-
     }
 }

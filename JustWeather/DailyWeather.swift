@@ -8,25 +8,37 @@
 import SwiftUI
 
 struct DailyWeather: View {
-    @EnvironmentObject var weatherService: WeatherService
+    let dailyWeather: [Weather.Daily]
     
     var body: some View {
         VStack {
-            ForEach(weatherService.dailyWeather.dropFirst(), id: \.self) { day in
-                HStack {
-                    Text(day.dt.formatted(.dateTime.weekday(.wide)))
+            ForEach(dailyWeather.dropFirst(), id: \.self) { day in
+                ZStack {
+                    HStack {
+                        Text(LocalizedStringKey(day.dt.formatted(.dateTime.weekday(.wide)).capitalizingFirstLetter()))
+                        
 
+                        Spacer()
+                        
+                        Text(day.temp.max.roundedDegrees())
+                            .frame(width: 35, alignment: .trailing)
+                            .font(.subheadline.bold())
+                        
+                        Text(day.temp.min.roundedDegrees())
+                            .foregroundColor(.secondary)
+                            .frame(width: 35, alignment: .trailing)
+                    }
+                    
                     Spacer()
                     
                     Image(systemName: day.weather[0].getWeatherIcon())
-                        .font(.largeTitle)
+                        .font(.title)
                     
                     Spacer()
                     
-                    Text(day.temp.max.roundedDegrees())
-                    
-                    Text(day.temp.min.roundedDegrees())
                 }
+                .font(.subheadline)
+                
             }
         }
         .padding(.horizontal)
@@ -34,7 +46,9 @@ struct DailyWeather: View {
 }
 
 struct DailyWeather_Previews: PreviewProvider {
+    static let collection: Weather = Bundle.main.decode("exampleWeather.json")
+    
     static var previews: some View {
-        DailyWeather()
+        DailyWeather(dailyWeather: collection.daily)
     }
 }

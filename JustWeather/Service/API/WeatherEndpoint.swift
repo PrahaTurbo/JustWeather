@@ -8,14 +8,12 @@
 import Foundation
 
 enum WeatherEndpoint {
-    case location, weather
+    case weather
 }
 
 extension WeatherEndpoint {
     var urlString: String {
         switch self {
-        case .location:
-            return "https://api.openweathermap.org/geo/1.0/direct"
         case .weather:
             return "https://api.openweathermap.org/data/2.5/onecall"
         }

@@ -9,13 +9,22 @@ import Foundation
 
 @MainActor final class FavoritesService: ObservableObject {
     
-    @Published var cities = [Location]() {
+    @Published var cities: [Location] {
         didSet {
             save()
         }
     }
         
     @Published var alertForAdd = false
+    
+    func favoriteCitiesWithUserLocation(location: Location?) -> [Location] {
+        var result = cities
+        if let location = location {
+            result.insert(location, at: 0)
+        }
+
+        return result
+    }
     
     func add(city: Location) {
         if city == .placeholder {

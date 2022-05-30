@@ -16,7 +16,7 @@ struct SearchBar: View {
             HStack {
                 ZStack {
                     Rectangle()
-                        .fill(Color("LightGray"))
+                        .fill(.white)
                     
                     HStack {
                         Image(systemName: "magnifyingglass")
@@ -38,11 +38,15 @@ struct SearchBar: View {
                     .foregroundColor(.secondary)
                 }
                 .cornerRadius(13)
+                .overlay(
+                    RoundedRectangle(cornerRadius: 13)
+                        .stroke(lineWidth: 2)
+                )
             }
             .frame(height: 40)
         }
         .onAppear {
-            DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.6) {
                 searchIsFocused = true
             }
         }

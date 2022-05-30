@@ -11,18 +11,9 @@ struct Location: Codable, Identifiable, Hashable {
     var id = UUID()
     let name: String
     let subtitle: String
-    let latitude, longitude: String
-    var temp = "0"
+    let latitude: String
+    let longitude: String
     
     static let placeholder = Location(name: "Moscow", subtitle: "Russia", latitude: "55.7615902", longitude: "37.60946")
 }
-
-//struct Location: Codable {
-//    let name: String
-//    let localNames: [String: String]
-//    let lat, lon: Double
-//    let country, state: String
-//}
-//
-//typealias Locations = [Location]
 

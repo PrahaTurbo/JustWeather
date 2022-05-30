@@ -15,17 +15,19 @@ struct Settings: View {
     var body: some View {
         NavigationView {
             Form {
-                Section("Система измерений") {
-                    Picker("Система измерений", selection: $weatherService.units) {
+                Section("measurement-system") {
+                    Picker("measurement-system", selection: $weatherService.units) {
                         ForEach(Unit.allCases, id: \.self) { unit in
-                            Text(unit.rawValue.capitalizingFirstLetter())
+                            Text(LocalizedStringKey(unit.rawValue.capitalizingFirstLetter()))
                         }
                     }
                     .padding(5)
                     .listRowInsets(EdgeInsets())
                     .pickerStyle(.segmented)
                 }
+                
             }
+            .navigationBarTitleDisplayMode(.inline)
             .toolbar {
                 ToolbarItem(placement: .navigationBarLeading) {
                     Button {
@@ -36,9 +38,13 @@ struct Settings: View {
                         Image(systemName: "chevron.left")
                     }
                 }
+                
+                ToolbarItem(placement: .principal) {
+                    Text("settings-title")
+                        .bold()
+                }
             }
-            .navigationBarTitleDisplayMode(.inline)
-            .navigationTitle("Настройки")
+            
         }
         .transition(.move(edge: .trailing))
     }

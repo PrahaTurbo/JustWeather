@@ -8,13 +8,12 @@
 import SwiftUI
 
 struct HourlyWeather: View {
-    @EnvironmentObject var weatherService: WeatherService
+    let hourlyWeather: [Weather.Current]
     
     var body: some View {
         ScrollView(.horizontal, showsIndicators: false) {
-            
             HStack {
-                ForEach(weatherService.hourlyWeather.dropLast(24), id: \.self) { weather in
+                ForEach(hourlyWeather.dropLast(24), id: \.self) { weather in
                     VStack {
                         Text(weather.dt.formatted(.dateTime.hour()))
                             .font(.caption)
@@ -22,7 +21,7 @@ struct HourlyWeather: View {
                         Spacer ()
                         
                         Image(systemName: weather.weather[0].getWeatherIcon())
-                            .font(.largeTitle)
+                            .font(.title)
                         
                         Spacer ()
                         
@@ -34,13 +33,15 @@ struct HourlyWeather: View {
 
                 }
             }
-            .padding(.horizontal)
         }
+        .padding(.vertical)
     }
 }
 
 struct HourlyWeather_Previews: PreviewProvider {
+    static let collection: Weather = Bundle.main.decode("exampleWeather.json")
+    
     static var previews: some View {
-        HourlyWeather()
+        HourlyWeather(hourlyWeather: collection.hourly)
     }
 }

@@ -1,0 +1,33 @@
+/* 
+  Localizable.strings
+  JustWeather
+
+  Created by Артем Ластович on 30.05.2022.
+  
+*/
+
+//Main
+"add-city-text" = "Tap on menu to choose city";
+"feels-like" = "Feels like";
+"metre-per-second" = "m/s";
+"kilometers" = "km";
+
+//FavoriteCities
+"favorities-title" = "Favorities";
+"alert-title" = "Error";
+"alert-message" = "Failed to add location. Try to choose another one.";
+"done-button" = "Done";
+"edit-button" = "Edit";
+"add-user-location-title" = "Tap to open location";
+"add-user-location-subtitle" = "Get weather data of the current location";
+"cancel-button" = "Cancel";
+"search-placeholder" = "City";
+
+//Settings
+"settings-title" = "Settings";
+"measurement-system" = "Measurement system";
+"Metric" = "Metric";
+"Imperial" = "Imperial";
+
+//UserLocationService
+"current-location-name" = "Current location";

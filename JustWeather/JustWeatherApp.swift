@@ -12,7 +12,7 @@ struct JustWeather: App {
     @StateObject var favorites: FavoritesService
     @StateObject var locationService: LocationService
     @StateObject var weatherService: WeatherService
-    @StateObject var settingsService: SettingsService
+    @StateObject var userLocationService: UserLocationService
 
     
     var body: some Scene {
@@ -21,8 +21,7 @@ struct JustWeather: App {
                 .environmentObject(favorites)
                 .environmentObject(locationService)
                 .environmentObject(weatherService)
-                .environmentObject(settingsService)
-
+                .environmentObject(userLocationService)
         }
     }
     
@@ -30,6 +29,6 @@ struct JustWeather: App {
         _favorites = StateObject(wrappedValue: FavoritesService())
         _locationService = StateObject(wrappedValue: LocationService())
         _weatherService = StateObject(wrappedValue: WeatherService())
-        _settingsService = StateObject(wrappedValue: SettingsService())
+        _userLocationService = StateObject(wrappedValue: UserLocationService())
     }
 }
