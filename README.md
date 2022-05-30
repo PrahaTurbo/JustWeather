@@ -34,6 +34,7 @@ All favorite cities app saves in Documents Directory.
 * Search locations by city
 * Add cities to favorites
 * Choice between measurement systems
+* Full Russian and English language support
 
 ## Screenshots
 <img src="https://user-images.githubusercontent.com/62947475/171035800-a9b28db9-2a5a-414c-a937-df754f8460a1.png" height="320"> <img src="https://user-images.githubusercontent.com/62947475/171035804-4a620d6b-be0c-4521-af62-73c57ff43ede.png" height="320"> <img src="https://user-images.githubusercontent.com/62947475/171035792-f79f9b49-a76e-47ff-8575-6ddd2a88295d.png" height="320"> <img src="https://user-images.githubusercontent.com/62947475/171035806-fdd33d10-0751-4217-8456-ede6af7d27c6.png" height="320"> <img src="https://user-images.githubusercontent.com/62947475/171035808-c29866cb-2ef9-45d7-b86e-d2120f662bba.png" height="320">
