@@ -16,7 +16,7 @@
 ## General Information
 This is a simple weather app. The app uses [OpenWeather API](https://openweathermap.org/api/one-call-api#current) to get weather data.
 
-The app has the ability to search by locations. For this purpose, the app uses `MapKit`. When the user taps on a search result, the app sends the name of the location to `CoreLocation` to get the coordinates. If it retrieves the coordinates successfully, the application uses them for API request.
+The app has the ability to search by locations. For this purpose, it uses `MapKit`. When the user taps on a search result, the app sends the name of the location to `CoreLocation` to get the coordinates. If it retrieves the coordinates successfully, it uses them for API request.
 
 All favorite cities app saves in Documents Directory.
 
